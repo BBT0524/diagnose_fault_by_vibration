@@ -8,6 +8,6 @@
 - 分类器训练和保存
 
 ## 在0HP上测试集score：
-KNN score is: 90.295 in test dataset \
-GaussianNB score is: 91.561 in test dataset \
-RandomForest score is: 94.515 in test dataset
+KNN score is: 90.295% in test dataset \
+GaussianNB score is: 91.561% in test dataset \
+RandomForest score is: 94.515% in test dataset
