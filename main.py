@@ -9,6 +9,7 @@
           scipy: 1.4.1 
           pandas: 1.0.3
           sklearn: 0.22.1 
+          joblib: 0.14.1
 """
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import make_pipeline
@@ -16,6 +17,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
+import joblib         # -> 用来保存模型
 
 from utils.augment import preprocess
 from utils.feature import extract_feature
@@ -23,7 +25,7 @@ from utils.feature import extract_feature
 path = r"./data/0HP"
 data_mark = "FE"
 len_data = 1024
-overlap_rate = 50 # 50%
+overlap_rate = 50      # -> 50%
 random_seed = 1 
 fs = 12000
 
@@ -49,6 +51,9 @@ x_train, x_test, y_train, y_test = train_test_split(FX,
 knn = make_pipeline(StandardScaler(),  
                      KNeighborsClassifier(3))
 knn.fit(x_train, y_train)
+# 保存Model(models 文件夹要预先建立，否则会报错)
+joblib.dump(knn, 'models/knn.pkl')
+print("KNN model saved in ./models")
 
 score = knn.score(x_test, y_test) * 100
 print("KNN score is: %.3f"%score, "in test dataset")
@@ -58,12 +63,18 @@ nbg = make_pipeline(StandardScaler(),
                     GaussianNB())
 nbg.fit(x_train, y_train)
 
+joblib.dump(nbg, 'models/GaussianNB.pkl')
+print("GaussianNB model saved in ./models")
+
 score = nbg.score(x_test, y_test) * 100
 print("GaussianNB score is: %.3f"%score, "in test dataset")
 # 随机森林
 rfc = make_pipeline(StandardScaler(),
                     RandomForestClassifier(max_depth=6, random_state=0))
 rfc.fit(x_train, y_train)
+
+joblib.dump(rfc, 'models/RandomForest.pkl')
+print("RandomForest model saved in ./models")
 
 score = rfc.score(x_test, y_test) * 100
 print("RandomForest score is: %.3f"%score,  "in test dataset")
