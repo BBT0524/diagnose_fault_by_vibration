@@ -53,7 +53,7 @@ def data_augment(fs, win_tlen, overlap_rate, data_iteror, **kargs):
                              overlap_rate*win_tlen*fs//100 是论文中的重叠量。
         :param fs: 原始数据的采样频率
         :param data_iteror: 原始数据的生成器格式
-        :param kargs: {"norm": , "envspectrum": }
+        :param kargs: {"norm"}
                 norm  数据标准化的方式,三种选择：
                     1："min-max"；
                     2："Z-score", mean = 0, std = 1;
