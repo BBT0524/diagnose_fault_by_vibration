@@ -103,19 +103,22 @@ def data_augment(fs, win_tlen, overlap_rate, data_iteror, **kargs):
         # 数据标准化方式选择
         if key == "norm" and val == 1:
             X = MinMaxScaler().fit_transform(X.T)
+            X = X.T
         if key == "norm" and val == 2:
             X = scale(X.T)
+            X = X.T
         if key == "norm" and val == 3:
             X = StandardScaler().fit_transform(X.T)
+            X = X.T
             
     # 标准化后画图
-    # x_0 = X.T[y==0][0]
+    # x_0 = X[y==0][0]
     # plt.subplot(2,1,2)
     # plt.plot(np.linspace(0, len(x_0), len(x_0)), x_0)
     # plt.title("After normalize")
     # plt.show()  
     
-    return X.T, y
+    return X, y
 
 def under_sample_for_c0(X, y, low_c0, high_c0, random_seed):
     """ 使用非0类别数据的数目，来对0类别数据进行降采样。
