@@ -12,6 +12,7 @@ import numpy as np
 import random
 from sklearn.preprocessing  import scale, StandardScaler, MinMaxScaler
 from collections import Counter
+# import matplotlib.pyplot as plt
 
 def iteror_raw_data(data_path,data_mark):
     """ 
@@ -42,7 +43,8 @@ def iteror_raw_data(data_path,data_mark):
         file = loadmat(single_mat_path)
         for key, _ in file.items():
             if data_mark in key:
-                data = file[key]
+#                 data = file[key]
+                 data = file[key].ravel()  # 2020/06/22
 
         yield label, data
 
@@ -59,6 +61,8 @@ def data_augment(fs, win_tlen, overlap_rate, data_iteror, **kargs):
                     2："Z-score", mean = 0, std = 1;
                     3： sklearn中的StandardScaler；
         :return (X, y): X, 切分好的数据， y数据标签
+                        X[0].shape == (win_tlen*fs, )
+                        X.shape == (len(X), win_tlen*fs)
     """
     overlap_rate = int(overlap_rate)
     # 重合部分的时间长度，单位s
@@ -83,21 +87,35 @@ def data_augment(fs, win_tlen, overlap_rate, data_iteror, **kargs):
             y.append(np.array(current_label))
 
     # 转换为np数组
-    # X[0].shape == (win_tlen*fs, 1)
-    # X.shape == (len(X), win_tlen*fs, 1)
+    # X[0].shape == (win_tlen*fs, )
+    # X.shape == (len(X), win_tlen*fs)
     X = np.array(X)    
     y = np.array(y)
     
+    # 标准化前画图
+    # x_0 = X[y==0][0]
+    # plt.figure()
+    # plt.subplot(2,1,1)
+    # plt.plot(np.linspace(0, len(x_0), len(x_0)), x_0)
+    # plt.title("Before normalize")
+    
     for key, val in kargs.items():
         # 数据标准化方式选择
-        if key == "norm" and val == "1":
-            X = MinMaxScaler().fit_transform(X)
-        if key == "norm" and val == "2":
-            X = scale(X)
-        if key == "norm" and val == "3":
-            X = StandardScaler().fit_transform(X)
-
-    return X, y
+        if key == "norm" and val == 1:
+            X = MinMaxScaler().fit_transform(X.T)
+        if key == "norm" and val == 2:
+            X = scale(X.T)
+        if key == "norm" and val == 3:
+            X = StandardScaler().fit_transform(X.T)
+            
+    # 标准化后画图
+    # x_0 = X.T[y==0][0]
+    # plt.subplot(2,1,2)
+    # plt.plot(np.linspace(0, len(x_0), len(x_0)), x_0)
+    # plt.title("After normalize")
+    # plt.show()  
+    
+    return X.T, y
 
 def under_sample_for_c0(X, y, low_c0, high_c0, random_seed):
     """ 使用非0类别数据的数目，来对0类别数据进行降采样。
