@@ -53,7 +53,8 @@ def extract_feature(X, y,fs):
     """
     
     def skewness(s) -> float:
-        """ 偏度计算
+        """ 
+        偏度计算
         """
         N = len(s)
         s = np.ravel(s)
@@ -62,7 +63,8 @@ def extract_feature(X, y,fs):
         return np.sum(np.power(np.abs(s)-mean,3))/(N*rms**3)
 
     def maxf_in_env_spectrum(data, fs) -> float:
-        """ 包络谱最大幅值处的频率
+        """ 
+        包络谱最大幅值处的频率
         """
         data = np.ravel(data)
         N = len(data)
@@ -77,7 +79,8 @@ def extract_feature(X, y,fs):
         return  maxf
     
     def hist_for_entropy(s):
-        """ 对信号的直方图计算
+        """ 
+        对信号的直方图计算
             
             @param s:一维序列数据
             @return res: 直方图每个组对应的高度
@@ -108,7 +111,8 @@ def extract_feature(X, y,fs):
         return res, s_min, s_max, ncell
     
     def shannom_entropy_for_hist(s) -> float:
-        """ 一维序列的香农信号熵
+        """ 
+        一维序列的香农信号熵
         
             @param x: 一维序列数据
             @return estimate: 香农信号熵的无偏估计值
@@ -127,7 +131,8 @@ def extract_feature(X, y,fs):
         return estimate
     
     def pdf_for_median_am(s)  -> float: 
-        """ 一维序列信号幅值中位数处的概率密度估计
+        """ 
+        一维序列信号幅值中位数处的概率密度估计
             
             @param s: 一维序列信号
             @return 幅值中位数处的概率密度估计
@@ -153,7 +158,7 @@ def extract_feature(X, y,fs):
     feature['rms'] = [np.sqrt(np.dot(np.ravel(x),np.ravel(x))/ N) for x in X]
     feature['std'] = [np.std(x) for x in X]
     feature['skewness'] = [skewness(x) for x in X]
-    feature['kurtosis'] = [kurtosis(x,fisher=False)[0] for x in X]
+    feature['kurtosis'] = [kurtosis(x,fisher=False) for x in X]
     feature['maxf'] = [maxf_in_env_spectrum(x, fs) for x in X]
     feature['signal_entropy'] = [shannom_entropy_for_hist(x) for x in X]
     feature['am_median_pdf'] = [pdf_for_median_am(x) for x in X]
